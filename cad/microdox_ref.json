@@ -1,0 +1,460 @@
+{
+ "_README": "Microdox LEFT half, top view, mm. Origin = bottom-left of PCB outline bbox. +x = toward inner (thumb) edge. Right half = mirror. Values marked 'inferred' or 'MEASURE' must be confirmed on the real board before printing.",
+ "board_version_assumed": "Geometry is from v1 (2020) files. User's board is v2 (silkscreen). No public v2 outline/hole files exist. v1 outline/holes are a HYPOTHESIS for v2 until the paper template / fit slice confirms them.",
+ "user_build": {
+  "pcb": "Microdox v2",
+  "wireless": true,
+  "trrs_cable": "none (wireless)",
+  "battery_and_power_switch": "user mods, envelope MEASURE",
+  "controllers": "both face down (v2 guide)"
+ },
+ "pcb_outline_ccw": [
+  [
+   0.0,
+   85.049
+  ],
+  [
+   0.005,
+   7.381
+  ],
+  [
+   0.029,
+   7.143
+  ],
+  [
+   0.097,
+   6.921
+  ],
+  [
+   0.206,
+   6.716
+  ],
+  [
+   0.355,
+   6.535
+  ],
+  [
+   0.536,
+   6.386
+  ],
+  [
+   0.741,
+   6.277
+  ],
+  [
+   0.964,
+   6.209
+  ],
+  [
+   1.187,
+   6.187
+  ],
+  [
+   40.089,
+   6.191
+  ],
+  [
+   90.372,
+   0.023
+  ],
+  [
+   90.795,
+   0.0
+  ],
+  [
+   91.271,
+   0.054
+  ],
+  [
+   91.725,
+   0.185
+  ],
+  [
+   92.15,
+   0.387
+  ],
+  [
+   92.536,
+   0.655
+  ],
+  [
+   92.875,
+   0.985
+  ],
+  [
+   93.159,
+   1.371
+  ],
+  [
+   93.377,
+   1.806
+  ],
+  [
+   100.092,
+   14.065
+  ],
+  [
+   100.092,
+   20.065
+  ],
+  [
+   96.15,
+   39.211
+  ],
+  [
+   96.15,
+   87.435
+  ],
+  [
+   96.126,
+   87.67
+  ],
+  [
+   96.056,
+   87.893
+  ],
+  [
+   95.947,
+   88.096
+  ],
+  [
+   95.801,
+   88.272
+  ],
+  [
+   95.625,
+   88.417
+  ],
+  [
+   95.423,
+   88.527
+  ],
+  [
+   95.199,
+   88.596
+  ],
+  [
+   94.952,
+   88.622
+  ],
+  [
+   88.504,
+   88.622
+  ],
+  [
+   82.13,
+   93.384
+  ],
+  [
+   20.053,
+   93.384
+  ],
+  [
+   19.805,
+   93.359
+  ],
+  [
+   19.582,
+   93.289
+  ],
+  [
+   19.38,
+   93.18
+  ],
+  [
+   19.204,
+   93.034
+  ],
+  [
+   19.058,
+   92.858
+  ],
+  [
+   18.948,
+   92.656
+  ],
+  [
+   18.879,
+   92.432
+  ],
+  [
+   18.852,
+   92.183
+  ],
+  [
+   18.855,
+   87.43
+  ],
+  [
+   18.832,
+   87.199
+  ],
+  [
+   18.764,
+   86.974
+  ],
+  [
+   18.653,
+   86.767
+  ],
+  [
+   18.504,
+   86.586
+  ],
+  [
+   18.325,
+   86.439
+  ],
+  [
+   18.12,
+   86.33
+  ],
+  [
+   17.897,
+   86.262
+  ],
+  [
+   17.664,
+   86.239
+  ],
+  [
+   1.2,
+   86.242
+  ],
+  [
+   0.951,
+   86.215
+  ],
+  [
+   0.727,
+   86.146
+  ],
+  [
+   0.525,
+   86.036
+  ],
+  [
+   0.349,
+   85.89
+  ],
+  [
+   0.203,
+   85.714
+  ],
+  [
+   0.094,
+   85.512
+  ],
+  [
+   0.024,
+   85.289
+  ]
+ ],
+ "pcb_size": [
+  100.094,
+  93.387
+ ],
+ "mount_holes": {
+  "centers": [
+   [
+    14.204,
+    29.079
+   ],
+   [
+    21.595,
+    90.598
+   ],
+   [
+    57.656,
+    31.729
+   ],
+   [
+    81.354,
+    89.928
+   ],
+   [
+    85.844,
+    3.378
+   ]
+  ],
+  "pcb_drill_d": 2.2,
+  "source": "boardsource KiCad drill map; authoritative for PCB"
+ },
+ "switches": {
+  "centers_xy_rotdeg": [
+   [
+    48.023,
+    83.872,
+    0.0
+   ],
+   [
+    9.924,
+    76.728,
+    0.0
+   ],
+   [
+    28.973,
+    81.491,
+    0.0
+   ],
+   [
+    67.072,
+    81.491,
+    -0.0
+   ],
+   [
+    86.121,
+    79.109,
+    0.0
+   ],
+   [
+    9.924,
+    57.679,
+    0.0
+   ],
+   [
+    28.973,
+    62.441,
+    0.0
+   ],
+   [
+    48.023,
+    64.822,
+    0.0
+   ],
+   [
+    67.072,
+    62.441,
+    0.0
+   ],
+   [
+    86.121,
+    60.06,
+    0.0
+   ],
+   [
+    9.924,
+    38.63,
+    0.0
+   ],
+   [
+    28.973,
+    43.392,
+    0.0
+   ],
+   [
+    48.023,
+    45.773,
+    0.0
+   ],
+   [
+    67.072,
+    43.392,
+    -0.0
+   ],
+   [
+    86.121,
+    41.011,
+    0.0
+   ],
+   [
+    47.172,
+    19.167,
+    0.0
+   ],
+   [
+    68.493,
+    16.513,
+    -15.0
+   ],
+   [
+    89.733,
+    13.082,
+    -28.5
+   ]
+  ],
+  "pitch": 19.05,
+  "keycap_size": 18.0,
+  "source": "boardsource plate.dxf cutouts"
+ },
+ "cutouts": {
+  "usb": {
+   "note": "wireless: keep BOTH halves' USB open for charging/flashing. v1 position; MEASURE on v2.",
+   "edge": "outer (x=0 side)",
+   "y_range": [
+    11.5,
+    24.75
+   ],
+   "y_center_uncertain": [
+    16.4,
+    18.1
+   ],
+   "source": "v1 tray STL slot. v2: both controllers face down, plug body sits low -> slot cut to PCB bottom; MEASURE"
+  },
+  "trrs": {
+   "note": "wireless build: no cable. Slot only needed if the jack is still soldered on (it sticks out past the PCB edge). v1 position; MEASURE on v2.",
+   "edge": "inner (x=max side)",
+   "y_range": [
+    24.85,
+    31.7
+   ],
+   "jack_centerline_y": 28.3,
+   "pcb_edge_x_at_jack": 98.396,
+   "barrel_protrusion_past_pcb_est": [
+    2.5,
+    3.0
+   ],
+   "source": "tray STL slot; BLE tray fills it; plate.dxf notch x85.37..edge y24.63..31.50"
+  }
+ },
+ "zones": {
+  "controller_oled_xy": [
+   [
+    0,
+    6.19
+   ],
+   [
+    38.4,
+    27.02
+   ]
+  ],
+  "trrs_jack_body_xy": [
+   [
+    85.37,
+    24.63
+   ],
+   [
+    98.4,
+    31.5
+   ]
+  ],
+  "outer_thumb_keycap_overhang_past_pcb_edge": 1.84
+ },
+ "stack_defaults_mm": {
+  "source": "inferred from 40-percent 8mm tray + MX 5.0 mm PCB-top-to-plate-top; MEASURE",
+  "floor_t": 1.5,
+  "pcb_bottom_z": 4.4,
+  "pcb_t": 1.6,
+  "pcb_top_to_plate_top": 5.0,
+  "plate_t": 1.5,
+  "wall_top_z": 11.0,
+  "trrs_slot_floor_rel_pcb_top": -0.5,
+  "usb_slot_floor_rel_pcb_top_stock": 0.0,
+  "usb_slot_floor_recommended": "pcb_bottom_z (v2: both controllers face down)"
+ },
+ "fdm_defaults_mm": {
+  "pcb_clearance_per_side": 0.5,
+  "wall_t": 2.5,
+  "m2_clearance_hole_d": 2.4,
+  "m2_insert_hole_d": 3.2,
+  "insert_boss_d": 6.0,
+  "hole_fn": 48,
+  "bottom_edge_chamfer": 0.4,
+  "note": "insert hole size: use the insert maker's spec"
+ },
+ "placement": {
+  "pivot": "PCB inner edge at y=28.3 (98.396, 28.3)",
+  "rule": "left: rotate by -splay_deg/2 about pivot, move pivot to (-edge_gap/2, 0). right: mirror([1,0,0]) of left. Tops lean inward (Alice-style) for splay>0.",
+  "edge_gap": "distance between the two PCB inner edges at y=28.3"
+ }
+}

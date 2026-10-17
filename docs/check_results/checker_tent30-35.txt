@@ -1,0 +1,37 @@
+=== small parts (print orientation) ===
+  [PASS] spacer: one watertight body, flat on the bed: [39.4, 69.0, 14.0] mm
+  [PASS] spacer: prints as exported with no supports: 0.0 mm^3 in mid-air; largest overhang patch 23 mm^2 / 6.4 mm
+  [PASS] coupler: one watertight body, flat on the bed: [22.0, 61.0, 12.0] mm
+  [PASS] coupler: prints as exported with no supports: 0.0 mm^3 in mid-air; largest overhang patch 0 mm^2 / 0.0 mm
+
+=== tent 30.0 | lift 8.0 | spacer 40.0 | splay 0.0 ===
+  [PASS] stand: one watertight body
+  [PASS] nothing above the bottom-plate plane: max 0.0001 mm
+  [PASS] screw seats = stock 2.0 mm all round: 5 holes x 8 probes
+  [PASS] every screw: open straight path for head + driver (r 2 mm) to infinity: A-E clear, nothing but air below each seat
+  [PASS] USB plug (right-angle cable) clears the desk: lowest point 5.9 mm
+  [PASS] stand (plate-down): prints as exported with no supports: 0.0 mm^3 in mid-air; largest overhang patch 17 mm^2 / 4.9 mm
+  [PASS] stand fits 220x220 bed: [104.0, 96.0, 58.0] mm
+  [PASS] spacer seats on the tongues' sloped tops (lowering it 0.1 mm collides): 14.3 mm^3 overlap when lowered
+  [PASS] screws line up: spacer roof -> insert -> hole floor (4 joints): 4/4
+  [PASS] straight tool path from above to every joint screw (r 3 mm): 4/4 clear
+  [PASS] M3x10 screw: >= 4.5 mm in the insert, tip clear of the hole floor: 4.9 mm in insert, tip 1.3 mm above floor
+  [PASS] pad recesses all 0.5 mm deep (2 outer discs + foot-bar strip): 0.50, 0.50, 0.50, 0.50, 0.50
+  [PASS] no parts intersect in 3D (2 stands, spacer, 2 keyboards): 10 pairs
+
+=== tent 35.0 | lift 8.0 | spacer 40.0 | splay 0.0 ===
+  [PASS] stand: one watertight body
+  [PASS] nothing above the bottom-plate plane: max 0.0001 mm
+  [PASS] screw seats = stock 2.0 mm all round: 5 holes x 8 probes
+  [PASS] every screw: open straight path for head + driver (r 2 mm) to infinity: A-E clear, nothing but air below each seat
+  [PASS] USB plug (right-angle cable) clears the desk: lowest point 4.8 mm
+  [PASS] stand (plate-down): prints as exported with no supports: 0.0 mm^3 in mid-air; largest overhang patch 17 mm^2 / 4.9 mm
+  [PASS] stand fits 220x220 bed: [105.0, 96.0, 62.0] mm
+  [PASS] spacer seats on the tongues' sloped tops (lowering it 0.1 mm collides): 14.3 mm^3 overlap when lowered
+  [PASS] screws line up: spacer roof -> insert -> hole floor (4 joints): 4/4
+  [PASS] straight tool path from above to every joint screw (r 3 mm): 4/4 clear
+  [PASS] M3x10 screw: >= 4.5 mm in the insert, tip clear of the hole floor: 4.9 mm in insert, tip 1.3 mm above floor
+  [PASS] pad recesses all 0.5 mm deep (2 outer discs + foot-bar strip): 0.50, 0.50, 0.50, 0.50, 0.50
+  [PASS] no parts intersect in 3D (2 stands, spacer, 2 keyboards): 10 pairs
+
+OVERALL: PASS
