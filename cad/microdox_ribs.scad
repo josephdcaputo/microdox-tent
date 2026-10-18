@@ -9,10 +9,6 @@
 // the joint tight. Couplers (double tongues) chain spacers together. The joint geometry is the
 // same at every tent angle, so any spacer fits any pair of stands.
 //
-// Ballast keel (OPTIONAL, OFF by default; set keel = true to try it): a round metal rod (steel or brass) runs front to back
-// under the keys, through a teardrop "eye" hung from each rib. It slides in from the front and
-// stops against the back rib; gravity seats it in the eyes' V, so no glue. It is placed
-// automatically as far inboard as screw C's access path allows, clear of the desk.
 // Feet: a pad strip along each foot bar plus a pad disc at each outer foot, all in recesses of
 // the same depth so the pads come out level.
 //
@@ -20,8 +16,9 @@
 //   stand_left, stand_right   plate-down (keyboard face on the bed)
 //   spacer                    roof-down; spacer_len = gap between the two stands' foot-bar faces
 //   coupler                   flat; joins two spacers end to end (adds coupler_web mm)
-//   keel_rod                  preview only: the metal rod in place (not printed)
-//   assembly                  preview only (use orientation: both halves + bars + spacer)
+//   fit_plate                 test print: the stand's plate alone, keyboard face on the bed
+//   joint_test_tongue/_socket test print: one tongue + one spacer socket
+//   assembly                  preview only (use orientation: both halves + spacer)
 //
 // Geometry: microdox_ref.scad (v1 outline + drill-map holes; confirm on the v2 board).
 
@@ -75,16 +72,6 @@ bump_d     = 9.0;           // outer pad recess: 8-9 mm silicone discs (or 8 mm 
 strip_w    = 10;            // pad strip along each foot bar: cut 10 x 62 mm
 pad_recess = 0.5;           // depth of EVERY pad recess; pads stand proud by (pad thickness - this)
 
-/* ---------- ballast keel (round metal rod under the keys) ---------- */
-keel        = false;        // true = add the rod eyes (an experiment; off by default)
-keel_d      = 0;            // rod diameter; 0 = the largest standard rod that fits this tent
-KEEL_SIZES  = [19.05, 15.875, 12.7];   // 3/4, 5/8, 1/2 in (auto picks the first that fits)
-keel_len    = 76.2;         // rod length (3 in); it stops against the back rib, front end ~12 mm past the front rib
-keel_clear  = 0.3;          // radial clearance in the eyes
-keel_wall   = 2.4;          // eye wall
-keel_lift   = 2.0;          // nothing but the feet comes closer to the desk plane than this
-keel_sill   = 2.0;          // material under the eye's flat tip
-keel_margin = 1.0;          // minimum gap between the rod and any screw's access path
 
 /* ---------- keyboard placeholder (preview + checks) ---------- */
 standoff_h = 4.0;
@@ -93,35 +80,12 @@ cap_top_above_pcb = 18;
 $fn = 48;
 assert(tent_deg >= 20 && tent_deg <= 35, "tent_deg must be 20..35 (outside that the ribs/joint are not print-checked)");
 assert(outer_lift >= 8, "outer_lift must be >= 8 mm (USB plug and outer-foot clearance)");
-assert(!keel || k_fits(keel_dia()), str("keel rod ", keel_dia(), " mm does not fit at this tent (try a smaller keel_d, or 0 = auto)"));
-assert(!keel || keel_paths_clear(), "keel rod would cross a screw's access path");
-if (keel) echo(str("KEEL ROD: ", keel_dia(), " mm dia x ", keel_len, " mm (steel ~", round(PI * pow(keel_dia() / 2, 2) * keel_len * 7.85e-3),
-                   " g, brass ~", round(PI * pow(keel_dia() / 2, 2) * keel_len * 8.5e-3), " g)"));
 function plate_in_x() = (100.092 + 1.5) * cos(tent_deg) + plate_t * sin(tent_deg);   // plate's inner extent (world x)
 function x_face() = plate_in_x() + cap_reach;
 function foot_x() = x_face() - bar_w / 2;                       // inner foot (world x) follows the tent angle
 function top_slope() = max(top_slope_min, top_slope_sum - tent_deg);
 function y_mid() = (tongue_ys[0] + tongue_ys[1]) / 2;
 
-// Keel rod. Screw access paths (access_corridors) run down the plate normal, so in plate
-// coordinates (U along the plate, H below its top) each is a band |U - hole_x| <= seat_d/2.
-// The rod sits as far inboard (highest plate) as screw C's band allows, and as low as the eye's
-// teardrop tip allows. Its eye is a teardrop pointing down-inward (= up when printed plate-down).
-function kR(d)    = d / 2 + keel_clear;                                      // eye radius
-function k_tip(d) = sqrt(2) * kR(d) - (kR(d) + 0.5);                         // half-width of the eye's flat tip
-function k_U(d)   = M2_HOLES[2][0] - seat_d / 2 - kR(d) - keel_margin;
-function k_zc(d)  = keel_lift + keel_sill + (kR(d) + 0.5) * cos(tent_deg) + k_tip(d) * sin(tent_deg);
-function k_H(d)   = (outer_lift + k_U(d) * sin(tent_deg) - k_zc(d)) / cos(tent_deg);
-function k_fits(d) = k_H(d) - kR(d) >= plate_t + 1                            // clears the plate
-                  && k_U(d) - kR(d) - keel_margin >= M2_HOLES[0][0] + seat_d / 2;   // and screw A's path
-function keel_dia() = keel_d > 0 ? keel_d : let(ok = [for (d = KEEL_SIZES) if (k_fits(d)) d]) len(ok) ? ok[0] : KEEL_SIZES[len(KEEL_SIZES) - 1];
-function keel_R() = kR(keel_dia());
-function keel_c() = let(d = keel_dia()) [k_U(d) * cos(tent_deg) + k_H(d) * sin(tent_deg), k_zc(d)];   // world [x, z]
-function keel_y1() = rib_ys[2];                    // back end: a blind cup half way into the back rib
-function keel_y0() = keel_y1() - keel_len;         // front end
-function keel_paths_clear() = [for (h = M2_HOLES)
-    let(overlap = h[1] + seat_d / 2 + keel_margin > keel_y0() && h[1] - seat_d / 2 - keel_margin < keel_y1())
-    !overlap || abs(h[0] - k_U(keel_dia())) >= seat_d / 2 + keel_R() + keel_margin - 1e-6] == [true, true, true, true, true];
 function W(U, H) = [U * cos(tent_deg) + H * sin(tent_deg), outer_lift + U * sin(tent_deg) - H * cos(tent_deg)];
 function to_UH(x, z) = [x * cos(tent_deg) + (z - outer_lift) * sin(tent_deg), x * sin(tent_deg) - (z - outer_lift) * cos(tent_deg)];
 function bez(a, b, c, t) = (1 - t) * (1 - t) * a + 2 * (1 - t) * t * b + t * t * c;
@@ -164,24 +128,11 @@ module rib2d() offset(r = -4) offset(delta = 4) union() {
     stroke(curve(leg0, bowed(leg0, f, -1), f), band);                    // inner leg
     stroke(curve(br0, bowed(br0, f, 1), f), band * 0.8);                 // diagonal branch
     stroke([W(1, plate_t + 1), [3, band / 2]], band);                    // outer foot
-    // Keel strut: runs straight down the print (plate normal) and lands exactly on the foot bar's
+    // Bar strut: runs straight down the print (plate normal) and lands exactly on the foot bar's
     // outer-top edge, which is the bar's first printed layer; between ribs the bar is a short bridge.
     k = [x_face() - bar_w, bar_top(x_face() - bar_w)];
     kUH = to_UH(k[0], k[1]);
     stroke([W(kUH[0], H0), k], band * 0.8);
-    // Keel eye: a ring round the rod, pointed toward the plate (45 deg flanks, prints without
-    // support) and hung from the flange by a stem up the plate normal. The eye's hole is cut in 3D
-    // after this outline is rounded. Its underside stops at keel_lift, clear of the desk.
-    if (keel) {
-        c = keel_c(); Ro = keel_R() + keel_wall;
-        pn = [-sin(tent_deg), cos(tent_deg)];                   // plate normal (toward the plate)
-        intersection() {
-            hull() { translate(c) circle(r = Ro); translate(c + pn * Ro * sqrt(2)) circle(r = 0.01); }
-            translate([-50, keel_lift]) square([300, 200]);
-        }
-        kk = to_UH(c[0], c[1]);
-        stroke([W(kk[0], H0), c], band);
-    }
 }
 module ribs() for (y = rib_ys) translate([0, y + rib_t / 2, 0]) rotate([90, 0, 0]) linear_extrude(rib_t) rib2d();
 
@@ -225,17 +176,6 @@ module pad_recesses() {
     hull() for (y = [rib_ys[0], rib_ys[2]]) translate([foot_x(), y, -1]) cylinder(d = strip_w, h = pad_recess + 1);
 }
 
-// Keel: the rod (use orientation) and its eye bore: a teardrop whose tip points down-inward
-// (straight up when printed plate-down) with a short flat tip (a <8 mm bridge). The rod rests in
-// the teardrop's V. The bore runs from in front of the front rib to half way into the back rib.
-module keel_bore2d() let(R = keel_R(), w = k_tip(keel_dia()))
-    translate(keel_c()) rotate(tent_deg - 180)
-        hull() { circle(r = R, $fn = 64); for (s = [-1, 1]) translate([s * w, R + 0.5]) square(0.01, center = true); }
-module keel_rod() if (keel)
-    translate([0, keel_y1(), 0]) rotate([90, 0, 0]) linear_extrude(keel_len) translate(keel_c()) circle(d = keel_dia(), $fn = 64);
-module keel_bore() if (keel)
-    translate([0, keel_y1(), 0]) rotate([90, 0, 0]) linear_extrude(keel_len + 10) keel_bore2d();
-
 // A clear corridor along every screw axis, below the seat, through anything in the way
 // (at steep tents the foot bar crosses screw C's path). Vertical holes when printed plate-down.
 module access_corridors() plate_frame() for (h = M2_HOLES)
@@ -245,7 +185,6 @@ module stand_left() difference() {
     union() { plate(); ribs(); foot_bar(); tongues(); foot_pods(); }
     access_corridors();
     pad_recesses();
-    keel_bore();
     // nothing may rise above the bottom-plate plane (the keyboard sits there)
     plate_frame() translate([-50, -50, 0]) cube([300, 300, 100]);
 }
@@ -351,13 +290,11 @@ if (part == "stand_use")          stand_left();
 if (part == "stand_right_placed") right_side_placement() stand_left();
 if (part == "spacer_placed")      spacer_placed();
 if (part == "keyboard_left")      keyboard_placeholder();
-if (part == "keel_rod")           keel_rod();
 if (part == "keyboard_right")     right_side_placement() keyboard_placeholder();
 if (part == "assembly") {
     color([0.95, 0.47, 0.32]) stand_left();
     keyboard_placeholder();
     color([0.95, 0.47, 0.32]) right_side_placement() stand_left();
     right_side_placement() keyboard_placeholder();
-    color([0.80, 0.63, 0.30]) { keel_rod(); right_side_placement() keel_rod(); }
     color([0.98, 0.72, 0.40]) spacer_placed();
 }

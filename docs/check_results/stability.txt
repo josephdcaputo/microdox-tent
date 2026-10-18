@@ -1,18 +1,18 @@
-keyboard half 150 g, pads mu 0.8, rod: none
+keyboard half 150 g, pads mu 0.8
 
 === tent 20 deg: stand 28 g ===
-      no rod: lone half rocks at 101.3 N, never tips over  |  pair ~368 g, slides under drag at 2.9 N
+  lone half rocks at 101.3 N, never tips over  |  pair ~368 g, slides under drag at 2.9 N
   keypress can't slide it if mu > tan(tent) = 0.36: yes with mu 0.8; bare PLA (~0.3-0.5): no
 
 === tent 25 deg: stand 28 g ===
-      no rod: lone half rocks at 11.3 N, never tips over  |  pair ~368 g, slides under drag at 2.9 N
+  lone half rocks at 11.3 N, never tips over  |  pair ~368 g, slides under drag at 2.9 N
   keypress can't slide it if mu > tan(tent) = 0.47: yes with mu 0.8; bare PLA (~0.3-0.5): no
 
 === tent 30 deg: stand 29 g ===
-      no rod: lone half rocks at 5.5 N, tips over at 17.7 N  |  pair ~369 g, slides under drag at 2.9 N
+  lone half rocks at 5.5 N, tips over at 17.7 N  |  pair ~369 g, slides under drag at 2.9 N
   keypress can't slide it if mu > tan(tent) = 0.58: yes with mu 0.8; bare PLA (~0.3-0.5): no
 
 === tent 35 deg: stand 29 g ===
-      no rod: lone half rocks at 3.4 N, tips over at 6.8 N  |  pair ~370 g, slides under drag at 2.9 N
+  lone half rocks at 3.4 N, tips over at 6.8 N  |  pair ~370 g, slides under drag at 2.9 N
   keypress can't slide it if mu > tan(tent) = 0.70: yes with mu 0.8; bare PLA (~0.3-0.5): no
 

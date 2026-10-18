@@ -10,7 +10,6 @@ A 3D-printed tenting stand for the Boardsource **Microdox v2** (wireless build).
 | Stand (20/25/30/35°), spacers, coupler | Designed; all automated checks pass |
 | Test prints (fit plate, joint test) | Ready. **Print these first.** |
 | Metal base plate (heft) | Planned: a laser-cut steel or brass plate under each stand |
-| Rod "keel" | Tried and dropped. Still in the .scad as `keel = true`, off by default |
 | Board geometry | From the v1 files; v2 match not yet confirmed (see "Before you print") |
 
 ## How it works

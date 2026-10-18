@@ -20,13 +20,8 @@ Checks per tent angle (use orientation unless noted):
   whole   zero 3D interference between every pair of placed parts (both stands, spacer,
           keyboard placeholders), with splay applied
   chain   (--chain A B) spacer A + coupler + spacer B: zero interference, screws line up
-  keel    the metal rod: clear of every screw's access path; zero interference in its eyes, and
-          it rests on the eyes' V (lowering it collides) and against the back rib (pushing it
-          back collides); a clear straight path to slide it in; nothing but the feet comes
-          within keel_lift of the desk
-  feet    every pad recess floor at the same depth, so pads come out level
-  (keel checks run only when keel = true in the .scad, or with --keel / --keel-d D; --no-keel forces
-   them off. The rod is an optional experiment and is off by default.)
+  feet    every pad recess floor at the same depth, so pads come out level; nothing but the
+          feet comes within 2 mm of the desk plane
 Needs: openscad, pip install trimesh numpy shapely rtree
 """
 import argparse, json, math, os, re, subprocess, tempfile, warnings
@@ -41,6 +36,7 @@ REF = json.load(open(os.path.join(CAD, "microdox_ref.json")))
 HOLES = REF["mount_holes"]["centers"]
 USB_Y = sum(REF["cutouts"]["usb"]["y_range"]) / 2
 USB_CENTER_ABOVE_PLATE, USB_HALF_H, PLUG_LEN = 8.0, 3.5, 12.0   # right-angle USB-C plug (MEASURE)
+DESK_CLEAR = 2.0                                                 # only the feet may come closer to the desk plane
 SCREW_LEN = 10.0                                                 # M3 x 10 button head at every tongue
 
 
@@ -182,10 +178,6 @@ def check_angle(tent, a, tmp):
     th = math.radians(tent)
     n_up = np.array([-math.sin(th), 0, math.cos(th)]); down = -n_up
     P = dict(tent_deg=tent, outer_lift=a.lift, spacer_len=a.spacer_len, splay_deg=a.splay)
-    keel_on = (bool(C.get("keel")) or a.keel or a.keel_d > 0) and not a.no_keel
-    P["keel"] = "true" if keel_on else "false"
-    if keel_on and a.keel_d:
-        P["keel_d"] = a.keel_d
     f = lambda n: os.path.join(tmp, f"{n}_{tent}.stl")
     st = scad(f("stand_use"), "stand_use", **P)
     R("stand: one watertight body", st.is_watertight and len(st.split(only_watertight=False)) == 1)
@@ -269,33 +261,11 @@ def check_angle(tent, a, tmp):
     R(f"pad recesses all {C['pad_recess']} mm deep (2 outer discs + foot-bar strip)", ok_f,
       ", ".join("none" if z is None else f"{z:.2f}" for z in floors))
 
-    # ---- keel rod
-    if keel_on:
-        kd = scad_echo("keel_dia()", tmp, **P)
-        kc = scad_echo("keel_c()", tmp, **P)
-        y0, y1 = scad_echo("keel_y0()", tmp, **P), scad_echo("keel_y1()", tmp, **P)
-        klift = C["keel_lift"]
-        vol = math.pi * (kd / 2) ** 2 * C["keel_len"]
-        print(f"  [info] keel rod {kd:.3f} mm ({kd / 25.4:.3f} in) x {C['keel_len']} mm: steel {vol * 7.85e-3:.0f} g, brass {vol * 8.5e-3:.0f} g")
-        rod = "keel_rod();"
-        v_corr = interference([(rod, "access_corridors();")], P, tmp, f"kc{tent}")
-        R("rod clear of every screw's access path (full seat_d corridors)", not v_corr, "; ".join(v_corr) or "A-E clear")
-        v_fit = interference([(rod, "stand_left();")], P, tmp, f"kf{tent}")
-        drop = C["keel_clear"] + 0.3
-        low = scad(os.path.join(tmp, f"klow_{tent}.stl"), body=f"intersection() {{ stand_left(); translate([0, 0, -{drop}]) keel_rod(); }}", **P)
-        back = scad(os.path.join(tmp, f"kback_{tent}.stl"), body="intersection() { stand_left(); translate([0, 0.2, 0]) keel_rod(); }", **P)
-        lv = abs(low.volume) if low is not None else 0.0
-        bv = abs(back.volume) if back is not None else 0.0
-        R("rod sits free in its eyes, rests on their V (lowered collides), stops on the back rib",
-          not v_fit and lv > 0.5 and bv > 0.5, f"nominal {'clear' if not v_fit else v_fit}; lowered {drop:.1f} mm: {lv:.1f} mm^3; pushed back 0.2 mm: {bv:.1f} mm^3")
-        sweep = (f"translate([0, keel_y1(), 0]) rotate([90, 0, 0]) linear_extrude(keel_len + 80) "
-                 f"translate(keel_c()) circle(d = keel_dia(), $fn = 64);")
-        v_sw = interference([(sweep, "stand_left();")], P, tmp, f"ks{tent}")
-        R("rod slides straight in from the front (clear path through all three eyes)", not v_sw, "; ".join(v_sw) or "clear")
-        low_pts = st.vertices[st.vertices[:, 2] < klift - 0.01]
-        stray = low_pts[(low_pts[:, 0] > 14) & (low_pts[:, 0] < xf - C["bar_w"] - 1)]
-        R(f"nothing but the feet within {klift} mm of the desk plane", len(stray) == 0,
-          f"{len(stray)} stray vertices" if len(stray) else f"rod underside {kc[1] - kd / 2:.1f} mm, eyes >= {klift} mm")
+    # ---- only the feet reach the desk
+    low_pts = st.vertices[st.vertices[:, 2] < DESK_CLEAR - 0.01]
+    stray = low_pts[(low_pts[:, 0] > 14) & (low_pts[:, 0] < xf - C["bar_w"] - 1)]
+    R(f"nothing but the feet within {DESK_CLEAR} mm of the desk plane", len(stray) == 0,
+      f"{len(stray)} stray vertices" if len(stray) else "clear")
 
     pairs = [("stand_left();", "spacer_placed();"), ("right_side_placement() stand_left();", "spacer_placed();"),
              ("stand_left();", "right_side_placement() stand_left();"),
@@ -306,12 +276,8 @@ def check_angle(tent, a, tmp):
              ("right_side_placement() keyboard_placeholder();", "right_side_placement() stand_left();"),
              ("keyboard_placeholder();", "spacer_placed();"),
              ("right_side_placement() keyboard_placeholder();", "spacer_placed();")]
-    if keel_on:
-        pairs += [("keel_rod();", "keyboard_placeholder();"), ("keel_rod();", "spacer_placed();"),
-                  ("right_side_placement() keel_rod();", "right_side_placement() stand_left();"),
-                  ("right_side_placement() keel_rod();", "right_side_placement() keyboard_placeholder();")]
     worst = interference(pairs, P, tmp, f"t{tent}")
-    R("no parts intersect in 3D (2 stands, spacer, 2 keyboards" + (", 2 rods" if keel_on else "") + ")", not worst, "; ".join(worst) or f"{len(pairs)} pairs")
+    R("no parts intersect in 3D (2 stands, spacer, 2 keyboards" + "" + ")", not worst, "; ".join(worst) or f"{len(pairs)} pairs")
     return R.ok
 
 
@@ -358,9 +324,6 @@ def main():
     ap.add_argument("--splay", type=float, default=C["splay_deg"])
     ap.add_argument("--chain", type=float, nargs=2, default=None)
     ap.add_argument("--bed", type=float, nargs=2, default=[220, 220])
-    ap.add_argument("--no-keel", action="store_true", help="check the stand without the metal rod / eyes")
-    ap.add_argument("--keel-d", type=float, default=0, help="check with the rod eyes on, forcing this rod diameter")
-    ap.add_argument("--keel", action="store_true", help="check with the rod eyes on (keel = true), auto-sized rod")
     a = ap.parse_args()
     with tempfile.TemporaryDirectory() as tmp:
         print("=== small parts (print orientation) ===")
